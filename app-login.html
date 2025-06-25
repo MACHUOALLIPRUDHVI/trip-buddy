@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TripBuddy - Login</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#3b82f6">
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/201/201623.png">
+  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/201/201623.png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root{--primary-color:#3b82f6;--primary-light:#60a5fa;--secondary-color:#4fd1c5;--text-color:#f3f4f6;--bg-color:#000000;--card-bg:#111111;--border-color:#333333;--success-color:#10b981;--error-color:#ef4444}*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden}body{background-color:var(--bg-color);min-height:100vh;width:100vw;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;color:var(--text-color);position:relative;overflow:hidden}.background-circles{position:fixed;width:100%;height:100%;overflow:hidden;z-index:-1}.circle{position:absolute;border-radius:50%;background:linear-gradient(to right,rgba(59,130,246,0.1),rgba(79,209,197,0.1));animation:float 8s infinite ease-in-out alternate}.circle:nth-child(1){width:300px;height:300px;top:10%;left:10%}.circle:nth-child(2){width:400px;height:400px;bottom:10%;right:10%;animation-delay:2s}@keyframes float{0%{transform:translate(0,0) rotate(0deg)}100%{transform:translate(20px,-20px) rotate(10deg)}}.app-container{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;width:100%;max-width:100vw;height:100vh;padding:20px}.app-logo{display:flex;flex-direction:column;align-items:center;margin-top:20px;margin-bottom:20px}.app-logo img{width:80px;height:80px;border-radius:20px;margin-bottom:15px;background:linear-gradient(135deg,var(--primary-color),var(--secondary-color));padding:15px}.app-logo h1{font-size:28px;font-weight:600;background:linear-gradient(to right,var(--primary-color),var(--secondary-color));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:5px}.app-logo p{font-size:16px;opacity:0.7}.login-form{background:rgba(17,17,17,0.7);backdrop-filter:blur(10px);border-radius:20px;padding:30px;box-shadow:0 10px 30px rgba(0,0,0,0.2);border:1px solid var(--border-color);width:100%;max-width:450px;flex:1;display:flex;flex-direction:column}.form-title{font-size:24px;font-weight:600;margin-bottom:25px;text-align:center}.form-group{margin-bottom:20px;position:relative}.form-group label{display:block;margin-bottom:8px;font-size:14px;font-weight:500;color:var(--text-color)}.form-group .input-with-icon{position:relative}.form-group .input-with-icon i{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:var(--primary-light)}.form-control{width:100%;padding:15px 15px 15px 45px;border:1px solid var(--border-color);border-radius:10px;background:rgba(0,0,0,0.3);color:var(--text-color);font-size:16px;transition:all 0.3s ease}.form-control:focus{outline:none;border-color:var(--primary-color);box-shadow:0 0 0 2px rgba(59,130,246,0.3)}.form-control::placeholder{color:rgba(243,244,246,0.5)}.password-toggle{position:absolute;right:15px;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--text-color);opacity:0.7}.remember-forgot{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;font-size:14px}.remember-me{display:flex;align-items:center}.remember-me input{margin-right:8px;accent-color:var(--primary-color)}.forgot-password{color:var(--primary-light);text-decoration:none;transition:color 0.3s}.forgot-password:hover{color:var(--primary-color);text-decoration:underline}.btn-login{width:100%;padding:15px;background:linear-gradient(to right,#3b82f6,#60a5fa);border:none;border-radius:10px;color:white;font-size:1.2rem;font-weight:600;cursor:pointer;transition:all 0.3s ease;margin-bottom:20px}.btn-login:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(59,130,246,0.4)}.social-login{text-align:center;margin-top:20px}.social-login p{font-size:14px;margin-bottom:15px;position:relative}.social-login p::before,.social-login p::after{content:"";position:absolute;top:50%;width:30%;height:1px;background-color:var(--border-color)}.social-login p::before{left:0}.social-login p::after{right:0}.social-icons{display:flex;justify-content:center;gap:15px}.social-icon{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.1);cursor:pointer;transition:all 0.3s ease}.social-icon:hover{transform:translateY(-3px);background:rgba(255,255,255,0.2)}.social-icon i{font-size:20px}.signup-link{text-align:center;margin-top:30px;font-size:14px}.signup-link a{color:var(--primary-light);text-decoration:none;font-weight:600;transition:color 0.3s}.signup-link a:hover{color:var(--primary-color);text-decoration:underline}.notification{position:fixed;top:20px;right:20px;padding:15px 20px;border-radius:10px;background:rgba(16,185,129,0.9);color:white;font-size:14px;font-weight:500;box-shadow:0 5px 15px rgba(0,0,0,0.2);transform:translateX(150%);transition:transform 0.3s ease;z-index:1000;display:flex;align-items:center;gap:10px}.notification.error{background:rgba(239,68,68,0.9)}.notification.show{transform:translateX(0)}.notification i{font-size:18px}.loading-spinner{display:inline-block;width:20px;height:20px;border:3px solid rgba(255,255,255,0.3);border-radius:50%;border-top-color:white;animation:spin 1s ease-in-out infinite;margin-right:10px;display:none}@keyframes spin{to{transform:rotate(360deg)}}.btn-login.loading .loading-spinner{display:inline-block}@media (max-width:480px){.app-container{padding:15px}.login-form{padding:20px}.form-title{font-size:20px}.form-control{padding:12px 12px 12px 40px}.btn-login{padding:12px}}
+  </style>
+</head>
+<body>
+  <div class="background-circles">
+    <div class="circle"></div>
+    <div class="circle"></div>
+  </div>
+
+  <div class="app-container">
+    <div class="app-logo">
+      <img src="https://cdn-icons-png.flaticon.com/512/201/201623.png" alt="TripBuddy Logo">
+      <h1>TripBuddy</h1>
+      <p>Your Ultimate Travel Companion</p>
+    </div>
+
+    <div class="login-form">
+      <h2 class="form-title">Welcome Back</h2>
+
+      <form id="loginForm" style="display: flex; flex-direction: column; flex: 1;">
+        <div style="flex: 1;">
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <div class="input-with-icon">
+              <i class="fas fa-envelope"></i>
+              <input type="email" id="email" class="form-control" placeholder="Enter your email" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <div class="input-with-icon">
+              <i class="fas fa-lock"></i>
+              <input type="password" id="password" class="form-control" placeholder="Enter your password" required>
+              <span class="password-toggle" id="passwordToggle">
+                <i class="fas fa-eye"></i>
+              </span>
+            </div>
+          </div>
+
+          <div class="remember-forgot">
+            <div class="remember-me">
+              <input type="checkbox" id="rememberMe">
+              <label for="rememberMe">Remember me</label>
+            </div>
+            <a href="#" class="forgot-password">Forgot Password?</a>
+          </div>
+        </div>
+
+        <div style="margin-top: auto;">
+          <button type="submit" class="btn-login" id="loginButton">
+            <span class="loading-spinner"></span>
+            <span class="btn-text">Sign In</span>
+          </button>
+
+          <div class="social-login">
+            <p>Or sign in with</p>
+            <div class="social-icons">
+              <div class="social-icon">
+                <i class="fab fa-google" style="color: #DB4437;"></i>
+              </div>
+              <div class="social-icon">
+                <i class="fab fa-facebook-f" style="color: #4267B2;"></i>
+              </div>
+              <div class="social-icon">
+                <i class="fab fa-twitter" style="color: #1DA1F2;"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="signup-link" style="margin-top: 10px;">
+      Don't have an account? <a href="fullscreen-signup.html">Sign Up</a>
+    </div>
+  </div>
+
+  <div class="notification" id="notification">
+    <i class="fas fa-check-circle"></i>
+    <span id="notificationText">Login successful!</span>
+  </div>
+
+  <script>
+    if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('service-worker.js').then(function(registration){console.log('ServiceWorker registration successful with scope: ',registration.scope);}).catch(function(error){console.log('ServiceWorker registration failed: ',error);});});}document.addEventListener('DOMContentLoaded',function(){const loginForm=document.getElementById('loginForm');const passwordToggle=document.getElementById('passwordToggle');const passwordInput=document.getElementById('password');const loginButton=document.getElementById('loginButton');const notification=document.getElementById('notification');const notificationText=document.getElementById('notificationText');passwordToggle.addEventListener('click',function(){const type=passwordInput.getAttribute('type')==='password'?'text':'password';passwordInput.setAttribute('type',type);const eyeIcon=passwordToggle.querySelector('i');eyeIcon.classList.toggle('fa-eye');eyeIcon.classList.toggle('fa-eye-slash');});loginForm.addEventListener('submit',function(e){e.preventDefault();const email=document.getElementById('email').value;const password=document.getElementById('password').value;const rememberMe=document.getElementById('rememberMe').checked;loginButton.classList.add('loading');loginButton.disabled=true;setTimeout(function(){loginButton.classList.remove('loading');loginButton.disabled=false;localStorage.setItem('isLoggedIn','true');localStorage.setItem('userEmail',email);localStorage.setItem('userName',email.split('@')[0]);localStorage.setItem('userId','12345');localStorage.setItem('walletBalance','1500');if(rememberMe){localStorage.setItem('rememberMe','true');}notification.classList.remove('error');notificationText.textContent='Login successful! Redirecting...';notification.classList.add('show');setTimeout(function(){notification.classList.remove('show');},2000);setTimeout(function(){window.location.href='dashboard.html';},1500);},1500);});document.querySelector('.forgot-password').addEventListener('click',function(e){e.preventDefault();notification.classList.remove('error');notificationText.textContent='Password reset link sent to your email!';notification.classList.add('show');setTimeout(function(){notification.classList.remove('show');},3000);});document.querySelector('.social-icon:first-child').addEventListener('click',function(){notification.classList.remove('error');notificationText.textContent='Logging in with Google...';notification.classList.add('show');setTimeout(function(){notification.classList.remove('show');localStorage.setItem('isLoggedIn','true');localStorage.setItem('userEmail','user@gmail.com');localStorage.setItem('userName','Google User');localStorage.setItem('userId','google_12345');localStorage.setItem('walletBalance','1500');setTimeout(function(){window.location.href='dashboard.html';},1000);},2000);});if(localStorage.getItem('rememberMe')==='true'&&localStorage.getItem('isLoggedIn')==='true'){document.getElementById('email').value=localStorage.getItem('userEmail')||'';document.getElementById('rememberMe').checked=true;}});
+  </script>
+</body>
+</html>

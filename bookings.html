@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TripBuddy - Bookings</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #3b82f6;
+      --primary-light: #60a5fa;
+      --secondary-color: #0ea5e9;
+      --text-color: #f3f4f6;
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --border-color: #334155;
+      --success-color: #10b981;
+      --error-color: #ef4444;
+      --header-height: 70px;
+      --sidebar-width: 250px;
+      --font-heading: 'Poppins', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    .light-mode {
+      --primary-color: #1a56db;
+      --primary-light: #3b82f6;
+      --secondary-color: #0ea5e9;
+      --text-color: #333;
+      --bg-color: #f5f7fa;
+      --card-bg: #fff;
+      --border-color: #e2e8f0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: var(--font-body);
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: var(--font-heading);
+      font-weight: 600;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      min-height: 100vh;
+      transition: all 0.3s ease;
+    }
+
+    .background-circles {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .circle {
+      position: absolute;
+      border-radius: 50%;
+      background: linear-gradient(to right, rgba(59, 130, 246, 0.05), rgba(79, 209, 197, 0.05));
+      animation: float 8s infinite ease-in-out alternate;
+    }
+
+    .circle:nth-child(1) {
+      width: 300px;
+      height: 300px;
+      top: 10%;
+      left: 10%;
+    }
+
+    .circle:nth-child(2) {
+      width: 400px;
+      height: 400px;
+      bottom: 10%;
+      right: 10%;
+      animation-delay: 2s;
+    }
+
+    @keyframes float {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      100% { transform: translate(20px, -20px) rotate(10deg); }
+    }
+
+    /* Header Styles */
+    .header {
+      height: var(--header-height);
+      background-color: var(--card-bg);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 100;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo img {
+      height: 40px;
+    }
+
+    .logo h1 {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .theme-toggle {
+      cursor: pointer;
+      font-size: 20px;
+      color: var(--text-color);
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--primary-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+    }
+
+    .user-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .user-name {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .user-email {
+      font-size: 12px;
+      opacity: 0.7;
+    }
+
+    /* Sidebar Styles */
+    .sidebar {
+      width: var(--sidebar-width);
+      height: calc(100vh - var(--header-height));
+      background-color: var(--card-bg);
+      position: fixed;
+      top: var(--header-height);
+      left: 0;
+      padding: 20px 0;
+      overflow-y: auto;
+      z-index: 90;
+      border-right: 1px solid var(--border-color);
+    }
+
+    .sidebar-menu {
+      list-style: none;
+    }
+
+    .sidebar-item {
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      border-left: 3px solid transparent;
+      color: var(--text-color);
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+
+    .sidebar-item:hover {
+      background-color: rgba(59, 130, 246, 0.1);
+    }
+
+    .sidebar-item.active {
+      background-color: rgba(59, 130, 246, 0.15);
+      border-left-color: var(--primary-color);
+      color: var(--primary-color);
+    }
+
+    .sidebar-item i {
+      margin-right: 10px;
+      font-size: 18px;
+      width: 25px;
+      text-align: center;
+    }
+
+    /* Main Content Styles */
+    .main-content {
+      margin-left: var(--sidebar-width);
+      margin-top: var(--header-height);
+      padding: 20px;
+      min-height: calc(100vh - var(--header-height));
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 24px;
+      color: var(--text-color);
+      letter-spacing: -0.5px;
+    }
+
+    /* Booking Form Styles */
+    .booking-container {
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      padding: 24px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 24px;
+    }
+
+    .booking-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 20px;
+    }
+
+    .booking-tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      font-weight: 500;
+      color: var(--text-color);
+      opacity: 0.7;
+      border-bottom: 2px solid transparent;
+      transition: all 0.3s;
+    }
+
+    .booking-tab.active {
+      opacity: 1;
+      border-bottom-color: var(--primary-color);
+      color: var(--primary-color);
+    }
+
+    .booking-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-size: 14px;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-light);
+      transform: translateY(-2px);
+    }
+
+    /* Tickets Section */
+    .tickets-container {
+      margin-top: 30px;
+    }
+
+    .ticket {
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      padding: 20px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .ticket-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: rgba(59, 130, 246, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-color);
+      font-size: 20px;
+    }
+
+    .ticket-details {
+      flex: 1;
+    }
+
+    .ticket-title {
+      font-weight: 600;
+      margin-bottom: 5px;
+      font-size: 16px;
+    }
+
+    .ticket-info {
+      display: flex;
+      gap: 20px;
+      font-size: 14px;
+      color: var(--text-color);
+      opacity: 0.8;
+    }
+
+    .ticket-info span {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .ticket-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .ticket-btn {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .ticket-btn-view {
+      background-color: rgba(59, 130, 246, 0.1);
+      color: var(--primary-color);
+    }
+
+    .ticket-btn-view:hover {
+      background-color: rgba(59, 130, 246, 0.2);
+    }
+
+    /* Modal Styles */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s;
+    }
+
+    .modal.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-content {
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      width: 90%;
+      max-width: 500px;
+      max-height: 80vh;
+      overflow-y: auto;
+      padding: 24px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      transform: translateY(-20px);
+      transition: transform 0.3s;
+    }
+
+    .modal.show .modal-content {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: var(--text-color);
+      opacity: 0.7;
+    }
+
+    .modal-close:hover {
+      opacity: 1;
+    }
+
+    .ticket-details-container {
+      padding: 20px;
+      border: 1px dashed var(--border-color);
+      border-radius: 8px;
+      background-color: rgba(59, 130, 246, 0.05);
+    }
+
+    .ticket-detail-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+
+    .ticket-detail-label {
+      font-weight: 500;
+      color: var(--text-color);
+      opacity: 0.7;
+    }
+
+    .ticket-detail-value {
+      font-weight: 600;
+    }
+
+    .ticket-barcode {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .ticket-barcode img {
+      max-width: 100%;
+      height: 80px;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 992px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.active {
+        transform: translateX(0);
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .booking-form {
+        grid-template-columns: 1fr;
+      }
+
+      .user-info {
+        display: none;
+      }
+
+      .ticket {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .ticket-info {
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      .ticket-actions {
+        margin-top: 10px;
+        width: 100%;
+        justify-content: flex-end;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="background-circles">
+    <div class="circle"></div>
+    <div class="circle"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">
+      <img src="https://cdn-icons-png.flaticon.com/512/201/201623.png" alt="TripBuddy Logo">
+      <h1>TripBuddy</h1>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle" id="themeToggle">
+        <i class="fas fa-sun"></i>
+      </div>
+      <div class="user-profile" id="userProfile">
+        <div class="user-avatar" id="userAvatar">P</div>
+        <div class="user-info">
+          <div class="user-name" id="headerUserName">prudhvireddy00091</div>
+          <div class="user-email" id="headerUserEmail">prudhvireddy00091@gmail.com</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <ul class="sidebar-menu">
+      <li class="sidebar-item" id="dashboard-link">
+        <i class="fas fa-home"></i>
+        <span>Dashboard</span>
+      </li>
+
+      <li class="sidebar-item" id="trips-link" onclick="window.location.href='trips.html'">
+        <i class="fas fa-plane-departure"></i>
+        <span>Trips</span>
+      </li>
+
+      <li class="sidebar-item" id="accommodations-link">
+        <i class="fas fa-hotel"></i>
+        <span>Accommodations</span>
+      </li>
+      <li class="sidebar-item" id="food-link">
+        <i class="fas fa-utensils"></i>
+        <span>Food</span>
+      </li>
+      <li class="sidebar-item" id="maps-link">
+        <i class="fas fa-map-marked-alt"></i>
+        <span>Maps</span>
+      </li>
+
+      <li class="sidebar-item" id="settings-link">
+        <i class="fas fa-cog"></i>
+        <span>Settings</span>
+      </li>
+      <li class="sidebar-item" id="logout-link" style="color: #ef4444;">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Logout</span>
+      </li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <h1 class="page-title">Bookings</h1>
+
+    <!-- Booking Form -->
+    <div class="booking-container">
+      <div class="booking-tabs">
+        <div class="booking-tab active" data-tab="bus">Bus</div>
+        <div class="booking-tab" data-tab="train">Train</div>
+        <div class="booking-tab" data-tab="flight">Flight</div>
+        <div class="booking-tab" data-tab="car">Car</div>
+      </div>
+
+      <form id="bookingForm" class="booking-form">
+        <div class="form-group">
+          <label for="from">From</label>
+          <input type="text" id="from" class="form-control" placeholder="Enter origin city">
+        </div>
+
+        <div class="form-group">
+          <label for="to">To</label>
+          <input type="text" id="to" class="form-control" placeholder="Enter destination city">
+        </div>
+
+        <div class="form-group">
+          <label for="departure">Departure Date</label>
+          <input type="date" id="departure" class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label for="passengers">Passengers</label>
+          <select id="passengers" class="form-control">
+            <option value="1">1 Passenger</option>
+            <option value="2">2 Passengers</option>
+            <option value="3">3 Passengers</option>
+            <option value="4">4 Passengers</option>
+            <option value="5">5 Passengers</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="grid-column: span 2;">
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Book Now</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- My Tickets -->
+    <div class="tickets-container">
+      <h2 style="margin-bottom: 16px;">My Tickets</h2>
+
+      <div id="ticketsContainer">
+        <!-- Tickets will be added here dynamically -->
+      </div>
+    </div>
+  </main>
+
+  <!-- Ticket Modal -->
+  <div class="modal" id="ticketModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Ticket Details</h3>
+        <button class="modal-close" id="closeModal">&times;</button>
+      </div>
+      <div class="ticket-details-container" id="modalTicketDetails">
+        <!-- Ticket details will be added here dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // DOM Elements
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+    const userAvatar = document.getElementById('userAvatar');
+    const headerUserName = document.getElementById('headerUserName');
+    const headerUserEmail = document.getElementById('headerUserEmail');
+    const bookingTabs = document.querySelectorAll('.booking-tab');
+    const bookingForm = document.getElementById('bookingForm');
+    const ticketsContainer = document.getElementById('ticketsContainer');
+    const ticketModal = document.getElementById('ticketModal');
+    const closeModal = document.getElementById('closeModal');
+    const modalTicketDetails = document.getElementById('modalTicketDetails');
+    const dashboardLink = document.getElementById('dashboard-link');
+    const tripsLink = document.getElementById('trips-link');
+    const logoutLink = document.getElementById('logout-link');
+
+    // Check if user is logged in
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    if (!isLoggedIn) {
+      window.location.href = 'app-login.html';
+    } else {
+      // Update user information
+      const userName = localStorage.getItem('userName') || 'prudhvireddy00091';
+      const userEmail = localStorage.getItem('userEmail') || 'prudhvireddy00091@gmail.com';
+
+      if (headerUserName) headerUserName.textContent = userName;
+      if (headerUserEmail) headerUserEmail.textContent = userEmail;
+
+      // Set avatar initials
+      if (userAvatar) {
+        const nameParts = userName.split(' ');
+        let initials = '';
+        if (nameParts.length > 1) {
+          initials = nameParts[0].charAt(0) + nameParts[1].charAt(0);
+        } else {
+          initials = nameParts[0].charAt(0);
+        }
+        userAvatar.textContent = initials.toUpperCase();
+      }
+    }
+
+    // Theme toggle
+    themeToggle.addEventListener('click', function() {
+      body.classList.toggle('light-mode');
+      const icon = this.querySelector('i');
+      if (body.classList.contains('light-mode')) {
+        icon.classList.remove('fa-sun');
+        icon.classList.add('fa-moon');
+      } else {
+        icon.classList.remove('fa-moon');
+        icon.classList.add('fa-sun');
+      }
+      localStorage.setItem('lightMode', body.classList.contains('light-mode'));
+    });
+
+    // Check for saved theme preference
+    if (localStorage.getItem('lightMode') === 'true') {
+      body.classList.add('light-mode');
+      const icon = themeToggle.querySelector('i');
+      icon.classList.remove('fa-sun');
+      icon.classList.add('fa-moon');
+    } else {
+      // Default to dark mode
+      const icon = themeToggle.querySelector('i');
+      icon.classList.remove('fa-moon');
+      icon.classList.add('fa-sun');
+    }
+
+    // Booking tabs
+    bookingTabs.forEach(tab => {
+      tab.addEventListener('click', function() {
+        bookingTabs.forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+
+    // Booking form submission
+    bookingForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // Get form values
+      const transportType = document.querySelector('.booking-tab.active').dataset.tab;
+      const from = document.getElementById('from').value;
+      const to = document.getElementById('to').value;
+      const departure = document.getElementById('departure').value;
+      const passengers = document.getElementById('passengers').value;
+
+      if (!from || !to || !departure) {
+        alert('Please fill in all required fields');
+        return;
+      }
+
+      // Create ticket object
+      const ticket = {
+        id: Date.now(),
+        type: transportType,
+        from: from,
+        to: to,
+        departure: departure,
+        passengers: passengers,
+        price: getRandomPrice(transportType),
+        confirmationCode: generateConfirmationCode()
+      };
+
+      // Save ticket to localStorage
+      saveTicket(ticket);
+
+      // Add ticket to UI
+      addTicketToUI(ticket);
+
+      // Reset form
+      this.reset();
+
+      alert('Booking successful! Your ticket has been added to your trips.');
+    });
+
+    // Generate random price based on transport type
+    function getRandomPrice(type) {
+      const basePrice = {
+        bus: 20,
+        train: 40,
+        flight: 100,
+        car: 50
+      };
+
+      const base = basePrice[type] || 30;
+      const variance = base * 0.5;
+      return (base + Math.random() * variance).toFixed(2);
+    }
+
+    // Generate confirmation code
+    function generateConfirmationCode() {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      let code = '';
+      for (let i = 0; i < 6; i++) {
+        code += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return code;
+    }
+
+    // Save ticket to localStorage
+    function saveTicket(ticket) {
+      let tickets = JSON.parse(localStorage.getItem('tickets')) || [];
+      tickets.push(ticket);
+      localStorage.setItem('tickets', JSON.stringify(tickets));
+    }
+
+    // Load tickets from localStorage
+    function loadTickets() {
+      const tickets = JSON.parse(localStorage.getItem('tickets')) || [];
+      tickets.forEach(ticket => addTicketToUI(ticket));
+    }
+
+    // Add ticket to UI
+    function addTicketToUI(ticket) {
+      const ticketElement = document.createElement('div');
+      ticketElement.className = 'ticket';
+
+      const iconClass = {
+        bus: 'fa-bus',
+        train: 'fa-train',
+        flight: 'fa-plane',
+        car: 'fa-car'
+      };
+
+      const formattedDate = new Date(ticket.departure).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+
+      ticketElement.innerHTML = `
+        <div class="ticket-icon">
+          <i class="fas ${iconClass[ticket.type] || 'fa-ticket-alt'}"></i>
+        </div>
+        <div class="ticket-details">
+          <div class="ticket-title">${ticket.from} to ${ticket.to}</div>
+          <div class="ticket-info">
+            <span><i class="far fa-calendar"></i> ${formattedDate}</span>
+            <span><i class="fas fa-user"></i> ${ticket.passengers} passenger${ticket.passengers > 1 ? 's' : ''}</span>
+            <span><i class="fas fa-tag"></i> $${ticket.price}</span>
+          </div>
+        </div>
+        <div class="ticket-actions">
+          <button class="ticket-btn ticket-btn-view" data-id="${ticket.id}">View Ticket</button>
+        </div>
+      `;
+
+      ticketsContainer.appendChild(ticketElement);
+
+      // Add event listener to view button
+      ticketElement.querySelector('.ticket-btn-view').addEventListener('click', function() {
+        const ticketId = this.dataset.id;
+        showTicketDetails(ticketId);
+      });
+    }
+
+    // Show ticket details in modal
+    function showTicketDetails(ticketId) {
+      const tickets = JSON.parse(localStorage.getItem('tickets')) || [];
+      const ticket = tickets.find(t => t.id == ticketId);
+
+      if (!ticket) return;
+
+      const transportNames = {
+        bus: 'Bus',
+        train: 'Train',
+        flight: 'Flight',
+        car: 'Car Rental'
+      };
+
+      const formattedDate = new Date(ticket.departure).toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+
+      modalTicketDetails.innerHTML = `
+        <div class="ticket-detail-row">
+          <div class="ticket-detail-label">Transport Type:</div>
+          <div class="ticket-detail-value">${transportNames[ticket.type] || 'Ticket'}</div>
+        </div>
+        <div class="ticket-detail-row">
+          <div class="ticket-detail-label">From:</div>
+          <div class="ticket-detail-value">${ticket.from}</div>
+        </div>
+        <div class="ticket-detail-row">
+          <div class="ticket-detail-label">To:</div>
+          <div class="ticket-detail-value">${ticket.to}</div>
+        </div>
+        <div class="ticket-detail-row">
+          <div class="ticket-detail-label">Departure Date:</div>
+          <div class="ticket-detail-value">${formattedDate}</div>
+        </div>
+        <div class="ticket-detail-row">
+          <div class="ticket-detail-label">Passengers:</div>
+          <div class="ticket-detail-value">${ticket.passengers}</div>
+        </div>
+        <div class="ticket-detail-row">
+          <div class="ticket-detail-label">Price:</div>
+          <div class="ticket-detail-value">$${ticket.price}</div>
+        </div>
+        <div class="ticket-detail-row">
+          <div class="ticket-detail-label">Confirmation Code:</div>
+          <div class="ticket-detail-value">${ticket.confirmationCode}</div>
+        </div>
+        <div class="ticket-barcode">
+          <img src="https://bwipjs-api.metafloor.com/?bcid=code128&text=${ticket.confirmationCode}&scale=2&includetext&backgroundcolor=ffffff00" alt="Barcode">
+        </div>
+      `;
+
+      ticketModal.classList.add('show');
+    }
+
+    // Close modal
+    closeModal.addEventListener('click', function() {
+      ticketModal.classList.remove('show');
+    });
+
+    // Close modal when clicking outside
+    ticketModal.addEventListener('click', function(e) {
+      if (e.target === ticketModal) {
+        ticketModal.classList.remove('show');
+      }
+    });
+
+    // Navigation
+    dashboardLink.addEventListener('click', function() {
+      window.location.href = 'dashboard.html';
+    });
+
+    tripsLink.addEventListener('click', function() {
+      window.location.href = 'trips.html';
+    });
+
+    document.getElementById('accommodations-link').addEventListener('click', function() {
+      window.open('https://www.booking.com/index.html', '_blank');
+    });
+
+    document.getElementById('food-link').addEventListener('click', function() {
+      window.open('https://www.swiggy.com/', '_blank');
+    });
+
+    document.getElementById('maps-link').addEventListener('click', function() {
+      window.open('https://www.google.com/maps', '_blank');
+    });
+
+    document.getElementById('settings-link').addEventListener('click', function() {
+      window.location.href = 'settings.html';
+    });
+
+    // Logout functionality
+    logoutLink.addEventListener('click', function() {
+      if (confirm('Are you sure you want to logout?')) {
+        // Clear user data from localStorage
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('userName');
+        localStorage.removeItem('userEmail');
+        localStorage.removeItem('userPhone');
+
+        // Redirect to login page
+        window.location.href = 'app-login.html';
+      }
+    });
+
+    // Load tickets on page load
+    loadTickets();
+  </script>
+</body>
+</html>

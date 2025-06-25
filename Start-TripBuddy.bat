@@ -1,0 +1,3 @@
+@echo off 
+echo Opening Trip Buddy... 
+start "" "%~dp0app-login.html" 

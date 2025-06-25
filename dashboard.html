@@ -1,0 +1,1648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TripBuddy - Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --primary-color: #3b82f6;
+      --primary-light: #60a5fa;
+      --secondary-color: #0ea5e9;
+      --text-color: #f3f4f6;
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --border-color: #334155;
+      --success-color: #10b981;
+      --error-color: #ef4444;
+      --header-height: 70px;
+      --sidebar-width: 250px;
+      --font-heading: 'Poppins', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    .light-mode {
+      --primary-color: #1a56db;
+      --primary-light: #3b82f6;
+      --secondary-color: #0ea5e9;
+      --text-color: #333;
+      --bg-color: #f5f7fa;
+      --card-bg: #fff;
+      --border-color: #e2e8f0;
+    }
+
+    body {
+      background-image:
+        linear-gradient(to bottom right, rgba(59, 130, 246, 0.03), rgba(14, 165, 233, 0.03)),
+        radial-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px);
+      background-size: 100% 100%, 20px 20px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: var(--font-body);
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: var(--font-heading);
+      font-weight: 600;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      min-height: 100vh;
+      transition: all 0.3s ease;
+    }
+
+    .background-circles {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .circle {
+      position: absolute;
+      border-radius: 50%;
+      background: linear-gradient(to right, rgba(59, 130, 246, 0.05), rgba(79, 209, 197, 0.05));
+      animation: float 8s infinite ease-in-out alternate;
+    }
+
+    .circle:nth-child(1) {
+      width: 300px;
+      height: 300px;
+      top: 10%;
+      left: 10%;
+    }
+
+    .circle:nth-child(2) {
+      width: 400px;
+      height: 400px;
+      bottom: 10%;
+      right: 10%;
+      animation-delay: 2s;
+    }
+
+    @keyframes float {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      100% { transform: translate(20px, -20px) rotate(10deg); }
+    }
+
+    /* Header Styles */
+    .header {
+      height: var(--header-height);
+      background-color: var(--card-bg);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 100;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo img {
+      height: 40px;
+    }
+
+    .logo h1 {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .theme-toggle {
+      cursor: pointer;
+      font-size: 20px;
+      color: var(--text-color);
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--primary-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+    }
+
+    .user-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .user-name {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .user-email {
+      font-size: 12px;
+      opacity: 0.7;
+    }
+
+    /* Sidebar Styles */
+    .sidebar {
+      width: var(--sidebar-width);
+      height: calc(100vh - var(--header-height));
+      background-color: var(--card-bg);
+      position: fixed;
+      top: var(--header-height);
+      left: 0;
+      padding: 20px 0;
+      overflow-y: auto;
+      z-index: 90;
+      border-right: 1px solid var(--border-color);
+    }
+
+    .sidebar-menu {
+      list-style: none;
+    }
+
+    .sidebar-item {
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      border-left: 3px solid transparent;
+      color: var(--text-color);
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+
+    .sidebar-item:hover {
+      background-color: rgba(59, 130, 246, 0.1);
+    }
+
+    .sidebar-item.active {
+      background-color: rgba(59, 130, 246, 0.15);
+      border-left-color: var(--primary-color);
+      color: var(--primary-color);
+    }
+
+    .sidebar-item i {
+      margin-right: 10px;
+      font-size: 18px;
+      width: 25px;
+      text-align: center;
+    }
+
+    /* Main Content Styles */
+    .main-content {
+      margin-left: var(--sidebar-width);
+      margin-top: var(--header-height);
+      padding: 20px;
+      min-height: calc(100vh - var(--header-height));
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 24px;
+      color: var(--text-color);
+      letter-spacing: -0.5px;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .dashboard-card {
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      padding: 24px;
+      transition: all 0.3s;
+      color: var(--text-color);
+      border: 1px solid var(--border-color);
+    }
+
+    .dashboard-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .dashboard-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    /* Currency Selector Styles */
+    .currency-toggle {
+      margin-left: auto;
+      margin-right: 15px;
+    }
+
+    .wallet-currency {
+      margin-right: 10px;
+    }
+
+    .wallet-currency .currency-select {
+      font-size: 12px;
+      padding: 6px 25px 6px 10px;
+      min-width: 90px;
+    }
+
+    .currency-selector {
+      position: relative;
+      display: inline-block;
+    }
+
+    .currency-select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      padding: 8px 30px 8px 12px;
+      background-color: rgba(59, 130, 246, 0.1);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: var(--text-color);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-width: 110px;
+    }
+
+    .currency-select:hover {
+      background-color: rgba(59, 130, 246, 0.2);
+    }
+
+    .currency-select:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+    }
+
+    .currency-selector i {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 12px;
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .dashboard-card-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+
+    .dashboard-card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background-color: rgba(59, 130, 246, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-color);
+      font-size: 18px;
+    }
+
+    .dashboard-card-content {
+      margin-bottom: 20px;
+    }
+
+    .dashboard-card-value {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text-color);
+    }
+
+    .dashboard-card-label {
+      font-size: 14px;
+      color: var(--text-color);
+      opacity: 0.7;
+    }
+
+    .dashboard-card-footer {
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+    }
+
+    .dashboard-card-footer i {
+      margin-right: 5px;
+    }
+
+    .dashboard-card-footer.positive {
+      color: var(--success-color);
+    }
+
+    .dashboard-card-footer.negative {
+      color: var(--error-color);
+    }
+
+    /* User Profile Card Styles */
+    .user-profile-card {
+      margin-bottom: 24px;
+    }
+
+    .user-profile-header {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .user-profile-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 28px;
+      font-weight: 600;
+    }
+
+    .user-profile-info h2 {
+      font-size: 24px;
+      margin-bottom: 5px;
+      color: var(--text-color);
+    }
+
+    .user-profile-info p {
+      font-size: 16px;
+      color: var(--text-color);
+      opacity: 0.7;
+    }
+
+    /* Wallet Styles */
+    .wallet-card {
+      position: relative;
+    }
+
+    .wallet-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .wallet-btn {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      transition: all 0.3s ease;
+    }
+
+    .wallet-btn.add-money {
+      background-color: rgba(16, 185, 129, 0.2);
+      color: var(--success-color);
+    }
+
+    .wallet-btn.withdraw {
+      background-color: rgba(239, 68, 68, 0.2);
+      color: var(--error-color);
+    }
+
+    .wallet-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .wallet-btn.add-money:hover {
+      background-color: rgba(16, 185, 129, 0.3);
+    }
+
+    .wallet-btn.withdraw:hover {
+      background-color: rgba(239, 68, 68, 0.3);
+    }
+
+    /* Spending Breakdown Styles */
+    .spending-breakdown {
+      margin-top: 20px;
+    }
+
+    .chart-container {
+      height: 250px;
+      position: relative;
+      margin-top: 20px;
+    }
+
+    /* Transaction History Styles */
+    .transaction-history {
+      margin-top: 20px;
+    }
+
+    .transaction-filters {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 8px;
+      background-color: rgba(59, 130, 246, 0.1);
+      color: var(--text-color);
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .filter-btn:hover {
+      background-color: rgba(59, 130, 246, 0.2);
+    }
+
+    .filter-btn.active {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    .transaction-table-container {
+      overflow-x: auto;
+      margin-bottom: 20px;
+    }
+
+    .transaction-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .transaction-table th,
+    .transaction-table td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .transaction-table th {
+      font-weight: 600;
+      background-color: rgba(59, 130, 246, 0.05);
+      position: sticky;
+      top: 0;
+    }
+
+    .transaction-table tbody tr {
+      transition: background-color 0.3s ease;
+    }
+
+    .transaction-table tbody tr:hover {
+      background-color: rgba(59, 130, 246, 0.05);
+    }
+
+    .transaction-status {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .status-completed {
+      background-color: rgba(16, 185, 129, 0.1);
+      color: var(--success-color);
+    }
+
+    .status-pending {
+      background-color: rgba(245, 158, 11, 0.1);
+      color: #f59e0b;
+    }
+
+    .status-failed {
+      background-color: rgba(239, 68, 68, 0.1);
+      color: var(--error-color);
+    }
+
+    .transaction-category {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .category-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+
+    .category-trips {
+      background-color: rgba(54, 162, 235, 0.2);
+      color: rgb(54, 162, 235);
+    }
+
+    .category-hotels {
+      background-color: rgba(255, 99, 132, 0.2);
+      color: rgb(255, 99, 132);
+    }
+
+    .category-food {
+      background-color: rgba(255, 206, 86, 0.2);
+      color: rgb(255, 206, 86);
+    }
+
+    .transaction-amount {
+      font-weight: 600;
+    }
+
+    .transaction-amount.expense {
+      color: var(--error-color);
+    }
+
+    .transaction-amount.income {
+      color: var(--success-color);
+    }
+
+    .transaction-summary {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding-top: 15px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .summary-item {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .summary-label {
+      font-size: 14px;
+      color: var(--text-color);
+      opacity: 0.7;
+    }
+
+    .summary-value {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+
+    /* Transportation Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .transportation-modal {
+      background: rgba(17, 17, 17, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      width: 90%;
+      max-width: 800px;
+      max-height: 80vh;
+      overflow-y: auto;
+      padding: 30px;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-color);
+      transform: translateY(30px);
+      transition: transform 0.3s ease;
+    }
+
+    .modal-overlay.show .transportation-modal {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .close-modal {
+      background: none;
+      border: none;
+      color: var(--text-color);
+      font-size: 1.5rem;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.3s ease;
+    }
+
+    .close-modal:hover {
+      opacity: 1;
+    }
+
+    .transportation-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .transport-option {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-color);
+      border-radius: 15px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .transport-option:hover {
+      transform: translateY(-5px);
+      background: rgba(59, 130, 246, 0.2);
+      border-color: var(--primary-color);
+    }
+
+    .transport-icon {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+      color: var(--primary-light);
+    }
+
+    .transport-name {
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    .transport-description {
+      font-size: 0.8rem;
+      opacity: 0.7;
+      margin-top: 5px;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 992px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.active {
+        transform: translateX(0);
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .user-info {
+        display: none;
+      }
+
+      .transportation-options {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="background-circles">
+    <div class="circle"></div>
+    <div class="circle"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">
+      <img src="https://cdn-icons-png.flaticon.com/512/201/201623.png" alt="TripBuddy Logo">
+      <h1>TripBuddy</h1>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle" id="themeToggle">
+        <i class="fas fa-sun"></i>
+      </div>
+      <div class="user-profile" id="userProfile">
+        <div class="user-avatar" id="userAvatar">P</div>
+        <div class="user-info">
+          <div class="user-name" id="headerUserName">prudhvireddy00091</div>
+          <div class="user-email" id="headerUserEmail">prudhvireddy00091@gmail.com</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <ul class="sidebar-menu">
+      <li class="sidebar-item active" id="dashboard-link">
+        <i class="fas fa-home"></i>
+        <span>Dashboard</span>
+      </li>
+
+      <li class="sidebar-item" id="trips-link">
+        <i class="fas fa-plane-departure"></i>
+        <span>Trips</span>
+      </li>
+
+      <li class="sidebar-item" id="accommodations-link">
+        <i class="fas fa-hotel"></i>
+        <span>Accommodations</span>
+      </li>
+      <li class="sidebar-item" id="food-link">
+        <i class="fas fa-utensils"></i>
+        <span>Food</span>
+      </li>
+      <li class="sidebar-item" id="maps-link">
+        <i class="fas fa-map-marked-alt"></i>
+        <span>Maps</span>
+      </li>
+      <li class="sidebar-item" id="settings-link">
+        <i class="fas fa-cog"></i>
+        <span>Settings</span>
+      </li>
+
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <h1 class="page-title">Dashboard</h1>
+
+    <!-- User Profile Card -->
+    <div class="dashboard-card user-profile-card">
+      <div class="user-profile-header">
+        <div class="user-profile-avatar" id="profileAvatar">P</div>
+        <div class="user-profile-info">
+          <h2 id="profileName">prudhvireddy00091</h2>
+          <p id="profileEmail">prudhvireddy00091@gmail.com</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Simple Stats -->
+    <div class="dashboard-grid">
+      <div class="dashboard-card">
+        <div class="dashboard-card-header">
+          <div class="dashboard-card-title">My Tickets</div>
+          <div class="dashboard-card-icon">
+            <i class="fas fa-ticket-alt"></i>
+          </div>
+        </div>
+        <div class="dashboard-card-content">
+          <div class="dashboard-card-value" id="ticketCount">0</div>
+          <div class="dashboard-card-label">Total tickets booked</div>
+        </div>
+      </div>
+
+      <div class="dashboard-card wallet-card">
+        <div class="dashboard-card-header">
+          <div class="dashboard-card-title">Wallet</div>
+          <div class="currency-toggle wallet-currency">
+            <div class="currency-selector">
+              <select id="walletCurrencySelect" class="currency-select">
+                <option value="INR">₹ INR</option>
+                <option value="USD">$ USD</option>
+                <option value="EUR">€ EUR</option>
+                <option value="GBP">£ GBP</option>
+              </select>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+          <div class="dashboard-card-icon">
+            <i class="fas fa-wallet"></i>
+          </div>
+        </div>
+        <div class="dashboard-card-content">
+          <div class="dashboard-card-value" id="walletBalance">$1,500</div>
+          <div class="dashboard-card-label">Available balance</div>
+        </div>
+        <div class="wallet-actions">
+          <button id="addMoneyBtn" class="wallet-btn add-money"><i class="fas fa-plus"></i> Add Money</button>
+          <button id="withdrawBtn" class="wallet-btn withdraw"><i class="fas fa-minus"></i> Withdraw</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Spending Breakdown -->
+    <div class="dashboard-card spending-breakdown">
+      <div class="dashboard-card-header">
+        <div class="dashboard-card-title">Spending Breakdown</div>
+        <div class="dashboard-card-icon">
+          <i class="fas fa-chart-pie"></i>
+        </div>
+      </div>
+      <div class="chart-container">
+        <canvas id="spendingChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Transaction History -->
+    <div class="dashboard-card transaction-history">
+      <div class="dashboard-card-header">
+        <div class="dashboard-card-title">Money Usage History</div>
+        <div class="currency-toggle">
+          <div class="currency-selector">
+            <select id="currencySelect" class="currency-select">
+              <option value="INR">₹ INR</option>
+              <option value="USD">$ USD</option>
+              <option value="EUR">€ EUR</option>
+              <option value="GBP">£ GBP</option>
+            </select>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+        </div>
+        <div class="dashboard-card-icon">
+          <i class="fas fa-history"></i>
+        </div>
+      </div>
+      <div class="transaction-filters">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="trips">Trips</button>
+        <button class="filter-btn" data-filter="hotels">Hotels</button>
+        <button class="filter-btn" data-filter="food">Food</button>
+      </div>
+      <div class="transaction-table-container">
+        <table class="transaction-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Category</th>
+              <th>Description</th>
+              <th>Amount</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="transactionTableBody">
+            <!-- Transaction rows will be added here dynamically -->
+          </tbody>
+        </table>
+      </div>
+      <div class="transaction-summary">
+        <div class="summary-item">
+          <span class="summary-label">Trips Total:</span>
+          <span class="summary-value" id="tripsTotal">$0.00</span>
+        </div>
+        <div class="summary-item">
+          <span class="summary-label">Hotels Total:</span>
+          <span class="summary-value" id="hotelsTotal">$0.00</span>
+        </div>
+        <div class="summary-item">
+          <span class="summary-label">Food Total:</span>
+          <span class="summary-value" id="foodTotal">$0.00</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Transportation Modal -->
+  <div class="modal-overlay" id="transportationModal">
+    <div class="transportation-modal">
+      <div class="modal-header">
+        <h2 class="modal-title">Choose Transportation</h2>
+        <button class="close-modal" id="closeModalBtn">&times;</button>
+      </div>
+      <div class="transportation-options">
+        <!-- Bus Option -->
+        <div class="transport-option" data-type="bus">
+          <div class="transport-icon">
+            <i class="fas fa-bus"></i>
+          </div>
+          <div class="transport-name">Bus</div>
+          <div class="transport-description">Book intercity and local buses</div>
+        </div>
+
+        <!-- Train Option -->
+        <div class="transport-option" data-type="train">
+          <div class="transport-icon">
+            <i class="fas fa-train"></i>
+          </div>
+          <div class="transport-name">Train</div>
+          <div class="transport-description">Book train tickets</div>
+        </div>
+
+        <!-- Flight Option -->
+        <div class="transport-option" data-type="flight">
+          <div class="transport-icon">
+            <i class="fas fa-plane-departure"></i>
+          </div>
+          <div class="transport-name">Flight</div>
+          <div class="transport-description">Book domestic & international flights</div>
+        </div>
+
+        <!-- Car Option -->
+        <div class="transport-option" data-type="car">
+          <div class="transport-icon">
+            <i class="fas fa-car"></i>
+          </div>
+          <div class="transport-name">Car Rental</div>
+          <div class="transport-description">Rent a car for your trip</div>
+        </div>
+
+        <!-- Cab Option -->
+        <div class="transport-option" data-type="cab">
+          <div class="transport-icon">
+            <i class="fas fa-taxi"></i>
+          </div>
+          <div class="transport-name">Cab</div>
+          <div class="transport-description">Book cabs for local travel</div>
+        </div>
+
+        <!-- Bike Option -->
+        <div class="transport-option" data-type="bike">
+          <div class="transport-icon">
+            <i class="fas fa-motorcycle"></i>
+          </div>
+          <div class="transport-name">Bike</div>
+          <div class="transport-description">Book Ola Bikes for local travel</div>
+        </div>
+
+        <!-- Metro Option -->
+        <div class="transport-option" data-type="metro">
+          <div class="transport-icon">
+            <i class="fas fa-subway"></i>
+          </div>
+          <div class="transport-name">Metro</div>
+          <div class="transport-description">Book metro tickets for city travel</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // DOM Elements
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+    const userAvatar = document.getElementById('userAvatar');
+    const headerUserName = document.getElementById('headerUserName');
+    const headerUserEmail = document.getElementById('headerUserEmail');
+    const profileAvatar = document.getElementById('profileAvatar');
+    const profileName = document.getElementById('profileName');
+    const profileEmail = document.getElementById('profileEmail');
+    const ticketCount = document.getElementById('ticketCount');
+    const walletBalance = document.getElementById('walletBalance');
+    const addMoneyBtn = document.getElementById('addMoneyBtn');
+    const withdrawBtn = document.getElementById('withdrawBtn');
+    const spendingChart = document.getElementById('spendingChart');
+
+    const settingsLink = document.getElementById('settings-link');
+
+    // Check if user is logged in
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    if (!isLoggedIn) {
+      // Redirect to login page if not logged in
+      window.location.href = 'app-login.html';
+    } else {
+      // Update user information
+      const userName = localStorage.getItem('userName') || 'User';
+      const userEmail = localStorage.getItem('userEmail') || 'user@example.com';
+
+      if (headerUserName) headerUserName.textContent = userName;
+      if (headerUserEmail) headerUserEmail.textContent = userEmail;
+      if (profileName) profileName.textContent = userName;
+      if (profileEmail) profileEmail.textContent = userEmail;
+
+      // Set avatar initials
+      const nameParts = userName.split(' ');
+      let initials = '';
+      if (nameParts.length > 1) {
+        initials = nameParts[0].charAt(0) + nameParts[1].charAt(0);
+      } else {
+        initials = nameParts[0].charAt(0);
+      }
+
+      if (userAvatar) userAvatar.textContent = initials.toUpperCase();
+      if (profileAvatar) profileAvatar.textContent = initials.toUpperCase();
+
+      // Update ticket count
+      const tickets = JSON.parse(localStorage.getItem('tickets')) || [];
+      if (ticketCount) ticketCount.textContent = tickets.length;
+
+      // Update wallet balance
+      const balance = parseFloat(localStorage.getItem('walletBalance')) || 1500;
+      // Note: We'll update the wallet display after the formatCurrency function is defined
+
+      // Update spending chart
+      updateSpendingChart();
+    }
+
+    // Theme toggle
+    themeToggle.addEventListener('click', function() {
+      body.classList.toggle('light-mode');
+      const icon = this.querySelector('i');
+      if (body.classList.contains('light-mode')) {
+        icon.classList.remove('fa-sun');
+        icon.classList.add('fa-moon');
+      } else {
+        icon.classList.remove('fa-moon');
+        icon.classList.add('fa-sun');
+      }
+      localStorage.setItem('lightMode', body.classList.contains('light-mode'));
+    });
+
+    // Check for saved theme preference
+    if (localStorage.getItem('lightMode') === 'true') {
+      body.classList.add('light-mode');
+      const icon = themeToggle.querySelector('i');
+      icon.classList.remove('fa-sun');
+      icon.classList.add('fa-moon');
+    } else {
+      // Default to dark mode
+      const icon = themeToggle.querySelector('i');
+      icon.classList.remove('fa-moon');
+      icon.classList.add('fa-sun');
+    }
+
+    // Navigation
+    const accommodationsLink = document.getElementById('accommodations-link');
+    const foodLink = document.getElementById('food-link');
+    const mapsLink = document.getElementById('maps-link');
+
+    // Accommodations link - Show hotels booking sites
+    accommodationsLink.addEventListener('click', function() {
+      window.open('https://www.booking.com/index.html', '_blank');
+    });
+
+    // Food link - Show food delivery sites
+    foodLink.addEventListener('click', function() {
+      window.open('https://www.swiggy.com/', '_blank');
+    });
+
+    // Maps link - Show Google Maps
+    mapsLink.addEventListener('click', function() {
+      window.open('https://www.google.com/maps', '_blank');
+    });
+
+    settingsLink.addEventListener('click', function() {
+      window.location.href = 'settings.html';
+    });
+
+    // Transportation Modal
+    const tripsLink = document.getElementById('trips-link');
+    const transportationModal = document.getElementById('transportationModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const transportOptions = document.querySelectorAll('.transport-option');
+
+    // Show modal when trips link is clicked
+    tripsLink.addEventListener('click', function() {
+      transportationModal.classList.add('show');
+    });
+
+    // Close modal when close button is clicked
+    closeModalBtn.addEventListener('click', function() {
+      transportationModal.classList.remove('show');
+    });
+
+    // Close modal when clicking outside
+    transportationModal.addEventListener('click', function(e) {
+      if (e.target === transportationModal) {
+        transportationModal.classList.remove('show');
+      }
+    });
+
+    // Handle transport option selection
+    transportOptions.forEach(option => {
+      option.addEventListener('click', function() {
+        const transportType = this.getAttribute('data-type');
+        switch(transportType) {
+          case 'bus':
+            window.open('https://www.apsrtconline.in/oprs-web/', '_blank');
+            break;
+          case 'train':
+            window.open('https://www.irctc.co.in/nget/train-search', '_blank');
+            break;
+          case 'flight':
+            window.open('https://www.makemytrip.com/flights/', '_blank');
+            break;
+          case 'car':
+            window.open('https://www.zoomcar.com/', '_blank');
+            break;
+          case 'cab':
+            window.open('https://www.olacabs.com/', '_blank');
+            break;
+          case 'bike':
+            window.open('https://www.olacabs.com/bikes', '_blank');
+            break;
+          case 'metro':
+            window.open('https://www.hyderabadmetrorail.in/book-ticket', '_blank');
+            break;
+          default:
+            window.location.href = 'trips.html';
+        }
+        transportationModal.classList.remove('show');
+      });
+    });
+
+
+
+    // Wallet functionality
+    let balance = parseFloat(localStorage.getItem('walletBalance')) || 1500;
+    // Note: walletBalance display is updated by updateWalletDisplay() function
+
+    addMoneyBtn.addEventListener('click', function() {
+      const amount = prompt('Enter amount to add:', '100');
+      if (amount !== null && !isNaN(amount) && parseFloat(amount) > 0) {
+        balance += parseFloat(amount);
+        localStorage.setItem('walletBalance', balance);
+        updateWalletDisplay();
+
+        // Show alert with appropriate currency
+        const symbol = currencySymbols[currentCurrency];
+        const convertedAmount = parseFloat(amount) * conversionRates[currentCurrency];
+
+        if (currentCurrency === 'INR') {
+          alert(symbol + convertedAmount.toFixed(0) + ' added to your wallet!');
+        } else {
+          alert(symbol + convertedAmount.toFixed(2) + ' added to your wallet!');
+        }
+
+        updateSpendingChart();
+        renderTransactions(document.querySelector('.filter-btn.active').getAttribute('data-filter'));
+      }
+    });
+
+    withdrawBtn.addEventListener('click', function() {
+      const amount = prompt('Enter amount to withdraw:', '50');
+      if (amount !== null && !isNaN(amount) && parseFloat(amount) > 0) {
+        if (parseFloat(amount) <= balance) {
+          balance -= parseFloat(amount);
+          localStorage.setItem('walletBalance', balance);
+          updateWalletDisplay();
+
+          // Show alert with appropriate currency
+          const symbol = currencySymbols[currentCurrency];
+          const convertedAmount = parseFloat(amount) * conversionRates[currentCurrency];
+
+          if (currentCurrency === 'INR') {
+            alert(symbol + convertedAmount.toFixed(0) + ' withdrawn from your wallet!');
+          } else {
+            alert(symbol + convertedAmount.toFixed(2) + ' withdrawn from your wallet!');
+          }
+
+          updateSpendingChart();
+          renderTransactions(document.querySelector('.filter-btn.active').getAttribute('data-filter'));
+        } else {
+          alert('Insufficient balance!');
+        }
+      }
+    });
+
+    // Spending chart
+    function updateSpendingChart() {
+      // Get spending data from localStorage or use default values
+      const spendingData = JSON.parse(localStorage.getItem('spendingData')) || {
+        transportation: 350,
+        accommodation: 450,
+        food: 250,
+        shopping: 200,
+        activities: 150,
+        other: 100
+      };
+
+      // Create or update chart
+      if (window.myPieChart) {
+        window.myPieChart.data.datasets[0].data = Object.values(spendingData);
+        window.myPieChart.update();
+      } else {
+        window.myPieChart = new Chart(spendingChart, {
+          type: 'pie',
+          data: {
+            labels: ['Transportation', 'Accommodation', 'Food', 'Shopping', 'Activities', 'Other'],
+            datasets: [{
+              data: Object.values(spendingData),
+              backgroundColor: [
+                'rgba(54, 162, 235, 0.7)',
+                'rgba(255, 99, 132, 0.7)',
+                'rgba(255, 206, 86, 0.7)',
+                'rgba(75, 192, 192, 0.7)',
+                'rgba(153, 102, 255, 0.7)',
+                'rgba(255, 159, 64, 0.7)'
+              ],
+              borderColor: [
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+              ],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'right',
+                labels: {
+                  color: getComputedStyle(document.documentElement).getPropertyValue('--text-color')
+                }
+              },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    const label = context.label || '';
+                    const value = context.raw || 0;
+                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                    const percentage = Math.round((value / total) * 100);
+                    return `${label}: $${value} (${percentage}%)`;
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
+    }
+
+    // Transaction History Functionality
+    const transactionTableBody = document.getElementById('transactionTableBody');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const tripsTotalElement = document.getElementById('tripsTotal');
+    const hotelsTotalElement = document.getElementById('hotelsTotal');
+    const foodTotalElement = document.getElementById('foodTotal');
+    const currencySelect = document.getElementById('currencySelect');
+    const walletCurrencySelect = document.getElementById('walletCurrencySelect');
+
+    // Currency conversion rates (in a real app, these would come from an API)
+    const conversionRates = {
+      USD: 1,
+      INR: 83.12, // 1 USD = 83.12 INR (example rate)
+      EUR: 0.92,  // 1 USD = 0.92 EUR (example rate)
+      GBP: 0.79   // 1 USD = 0.79 GBP (example rate)
+    };
+
+    // Currency symbols for formatting
+    const currencySymbols = {
+      USD: '$',
+      INR: '₹',
+      EUR: '€',
+      GBP: '£'
+    };
+
+    // Get current currency from localStorage or default to INR
+    let currentCurrency = localStorage.getItem('currentCurrency') || 'INR';
+
+    // Set both dropdowns to match the current currency
+    currencySelect.value = currentCurrency;
+    walletCurrencySelect.value = currentCurrency;
+
+    // Sample transaction data (in a real app, this would come from a database)
+    const sampleTransactions = [
+      {
+        id: 1,
+        date: '2023-06-15',
+        category: 'trips',
+        description: 'Flight to New York',
+        amount: 350.00,
+        status: 'completed'
+      },
+      {
+        id: 2,
+        date: '2023-06-18',
+        category: 'hotels',
+        description: 'Marriott Hotel - 3 nights',
+        amount: 450.00,
+        status: 'completed'
+      },
+      {
+        id: 3,
+        date: '2023-06-19',
+        category: 'food',
+        description: 'Restaurant dinner',
+        amount: 85.50,
+        status: 'completed'
+      },
+      {
+        id: 4,
+        date: '2023-06-20',
+        category: 'food',
+        description: 'Grocery shopping',
+        amount: 45.75,
+        status: 'completed'
+      },
+      {
+        id: 5,
+        date: '2023-07-05',
+        category: 'trips',
+        description: 'Train tickets',
+        amount: 75.00,
+        status: 'completed'
+      },
+      {
+        id: 6,
+        date: '2023-07-10',
+        category: 'hotels',
+        description: 'Airbnb booking',
+        amount: 320.00,
+        status: 'pending'
+      },
+      {
+        id: 7,
+        date: '2023-07-12',
+        category: 'food',
+        description: 'Food delivery',
+        amount: 28.50,
+        status: 'completed'
+      },
+      {
+        id: 8,
+        date: '2023-07-15',
+        category: 'trips',
+        description: 'Cab fare',
+        amount: 35.00,
+        status: 'completed'
+      },
+      {
+        id: 9,
+        date: '2023-07-20',
+        category: 'hotels',
+        description: 'Resort booking',
+        amount: 550.00,
+        status: 'failed'
+      },
+      {
+        id: 10,
+        date: '2023-07-25',
+        category: 'food',
+        description: 'Restaurant lunch',
+        amount: 65.25,
+        status: 'completed'
+      }
+    ];
+
+    // Save sample transactions to localStorage if not already present
+    if (!localStorage.getItem('transactions')) {
+      localStorage.setItem('transactions', JSON.stringify(sampleTransactions));
+    }
+
+    // Get transactions from localStorage
+    function getTransactions() {
+      return JSON.parse(localStorage.getItem('transactions')) || [];
+    }
+
+    // Format date to a more readable format
+    function formatDate(dateString) {
+      const options = { year: 'numeric', month: 'short', day: 'numeric' };
+      return new Date(dateString).toLocaleDateString(undefined, options);
+    }
+
+    // Get category icon based on category name
+    function getCategoryIcon(category) {
+      switch(category) {
+        case 'trips':
+          return '<i class="fas fa-plane"></i>';
+        case 'hotels':
+          return '<i class="fas fa-hotel"></i>';
+        case 'food':
+          return '<i class="fas fa-utensils"></i>';
+        default:
+          return '<i class="fas fa-receipt"></i>';
+      }
+    }
+
+    // Get status class based on status name
+    function getStatusClass(status) {
+      switch(status) {
+        case 'completed':
+          return 'status-completed';
+        case 'pending':
+          return 'status-pending';
+        case 'failed':
+          return 'status-failed';
+        default:
+          return '';
+      }
+    }
+
+    // Format amount as currency with conversion
+    function formatCurrency(amount) {
+      // Convert amount based on current currency
+      const convertedAmount = amount * conversionRates[currentCurrency];
+
+      // Format based on currency
+      switch(currentCurrency) {
+        case 'INR':
+          return new Intl.NumberFormat('en-IN', {
+            style: 'currency',
+            currency: 'INR',
+            maximumFractionDigits: 0 // INR typically doesn't show decimal places
+          }).format(convertedAmount);
+        case 'EUR':
+          return new Intl.NumberFormat('de-DE', {
+            style: 'currency',
+            currency: 'EUR'
+          }).format(convertedAmount);
+        case 'GBP':
+          return new Intl.NumberFormat('en-GB', {
+            style: 'currency',
+            currency: 'GBP'
+          }).format(convertedAmount);
+        default: // USD
+          return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD'
+          }).format(convertedAmount);
+      }
+    }
+
+    // Render transactions in the table
+    function renderTransactions(filter = 'all') {
+      const transactions = getTransactions();
+      let filteredTransactions = transactions;
+
+      // Apply filter if not 'all'
+      if (filter !== 'all') {
+        filteredTransactions = transactions.filter(transaction => transaction.category === filter);
+      }
+
+      // Sort transactions by date (newest first)
+      filteredTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      // Clear the table body
+      transactionTableBody.innerHTML = '';
+
+      // Add transactions to the table
+      filteredTransactions.forEach(transaction => {
+        const row = document.createElement('tr');
+
+        row.innerHTML = `
+          <td>${formatDate(transaction.date)}</td>
+          <td>
+            <div class="transaction-category">
+              <div class="category-icon category-${transaction.category}">${getCategoryIcon(transaction.category)}</div>
+              <span>${transaction.category.charAt(0).toUpperCase() + transaction.category.slice(1)}</span>
+            </div>
+          </td>
+          <td>${transaction.description}</td>
+          <td class="transaction-amount expense">${formatCurrency(transaction.amount)}</td>
+          <td><span class="transaction-status ${getStatusClass(transaction.status)}">${transaction.status.charAt(0).toUpperCase() + transaction.status.slice(1)}</span></td>
+        `;
+
+        transactionTableBody.appendChild(row);
+      });
+
+      // Update summary totals
+      updateSummaryTotals();
+    }
+
+    // Update summary totals
+    function updateSummaryTotals() {
+      const transactions = getTransactions();
+
+      // Calculate totals by category
+      const tripsTotal = transactions
+        .filter(t => t.category === 'trips' && t.status === 'completed')
+        .reduce((sum, t) => sum + t.amount, 0);
+
+      const hotelsTotal = transactions
+        .filter(t => t.category === 'hotels' && t.status === 'completed')
+        .reduce((sum, t) => sum + t.amount, 0);
+
+      const foodTotal = transactions
+        .filter(t => t.category === 'food' && t.status === 'completed')
+        .reduce((sum, t) => sum + t.amount, 0);
+
+      // Update the DOM elements
+      tripsTotalElement.textContent = formatCurrency(tripsTotal);
+      hotelsTotalElement.textContent = formatCurrency(hotelsTotal);
+      foodTotalElement.textContent = formatCurrency(foodTotal);
+
+      // Update spending data for the pie chart
+      const spendingData = {
+        transportation: tripsTotal,
+        accommodation: hotelsTotal,
+        food: foodTotal,
+        shopping: 200, // Default values for other categories
+        activities: 150,
+        other: 100
+      };
+
+      localStorage.setItem('spendingData', JSON.stringify(spendingData));
+      updateSpendingChart();
+    }
+
+    // Add event listeners to filter buttons
+    filterButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        // Remove active class from all buttons
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+
+        // Add active class to clicked button
+        this.classList.add('active');
+
+        // Get filter value and render transactions
+        const filter = this.getAttribute('data-filter');
+        renderTransactions(filter);
+      });
+    });
+
+    // Currency selector functionality for transaction history
+    currencySelect.addEventListener('change', function() {
+      // Get selected currency
+      currentCurrency = this.value;
+
+      // Sync wallet currency selector
+      walletCurrencySelect.value = currentCurrency;
+
+      // Save preference to localStorage
+      localStorage.setItem('currentCurrency', currentCurrency);
+
+      // Re-render transactions with new currency
+      renderTransactions(document.querySelector('.filter-btn.active').getAttribute('data-filter'));
+
+      // Update wallet balance display
+      updateWalletDisplay();
+    });
+
+    // Currency selector functionality for wallet
+    walletCurrencySelect.addEventListener('change', function() {
+      // Get selected currency
+      currentCurrency = this.value;
+
+      // Sync transaction history currency selector
+      currencySelect.value = currentCurrency;
+
+      // Save preference to localStorage
+      localStorage.setItem('currentCurrency', currentCurrency);
+
+      // Re-render transactions with new currency
+      renderTransactions(document.querySelector('.filter-btn.active').getAttribute('data-filter'));
+
+      // Update wallet balance display
+      updateWalletDisplay();
+    });
+
+    // Function to update wallet balance display with current currency
+    function updateWalletDisplay() {
+      const balance = parseFloat(localStorage.getItem('walletBalance')) || 1500;
+      walletBalance.textContent = formatCurrency(balance);
+    }
+
+    // Initialize transaction history and wallet display
+    renderTransactions();
+    updateWalletDisplay();
+  </script>
+</body>
+</html>
